@@ -182,12 +182,19 @@ new class extends Component {
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
             <div class="p-12">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-                    @if($this->book->image)
-                        <div class="lg:col-span-1">
-                            <img src="{{ Storage::url($this->book->image) }}" alt="{{ $this->book->title }}" class="w-full rounded-3xl shadow-2xl">
+                    <div class="lg:col-span-1">
+                        <div class="w-full h-80 bg-slate-100 rounded-3xl overflow-hidden flex items-center justify-center">
+                            @if($this->book->image)
+                                <img src="{{ Storage::url($this->book->image) }}" alt="{{ $this->book->title }}" class="w-full h-full object-cover shadow-2xl">
+                            @else
+                                <div class="flex flex-col items-center justify-center text-slate-400">
+                                    <span class="text-5xl mb-2">📚</span>
+                                    <span class="text-sm font-medium">No cover image</span>
+                                </div>
+                            @endif
                         </div>
-                    @endif
-                    <div class="{{ $this->book->image ? 'lg:col-span-2' : 'lg:col-span-3' }}">
+                    </div>
+                    <div class="lg:col-span-2">
                         <div class="flex items-start justify-between mb-6">
                             <div class="flex-1">
                                 <h1 class="text-5xl font-bold text-slate-800 mb-4">{{ $this->book->title }}</h1>

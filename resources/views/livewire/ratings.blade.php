@@ -6,6 +6,7 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Rule;
 use App\Models\Rating;
 use App\Models\BookRequest;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     #[Rule('required|integer|min:1|max:5')]
@@ -123,9 +124,23 @@ new class extends Component {
                 </a>
                 
                 <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6">
-                    <h1 class="text-3xl font-bold text-slate-800 mb-2">Rate {{ $this->type === 'lender' ? 'Lender' : 'Borrower' }}</h1>
-                    <p class="text-slate-600">Book: <span class="font-bold">{{ $this->bookRequest->book->title }}</span></p>
-                    <p class="text-slate-600">Rate: <span class="font-bold">{{ $this->ratedUser->name }}</span></p>
+                    <div class="flex items-center space-x-6">
+                        <div class="w-20 h-28 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center">
+                            @if($this->bookRequest->book->image)
+                                <img src="{{ Storage::url($this->bookRequest->book->image) }}" alt="{{ $this->bookRequest->book->title }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="flex flex-col items-center justify-center text-slate-400">
+                                    <span class="text-3xl mb-1">📚</span>
+                                    <span class="text-[10px] font-medium">No cover</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div>
+                            <h1 class="text-3xl font-bold text-slate-800 mb-2">Rate {{ $this->type === 'lender' ? 'Lender' : 'Borrower' }}</h1>
+                            <p class="text-slate-600">Book: <span class="font-bold">{{ $this->bookRequest->book->title }}</span></p>
+                            <p class="text-slate-600">Rate: <span class="font-bold">{{ $this->ratedUser->name }}</span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 

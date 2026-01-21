@@ -92,11 +92,16 @@ new class extends Component {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($this->books as $book)
             <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl hover:shadow-2xl border border-white/20 overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
-                @if($book->image)
-                    <div class="h-48 overflow-hidden">
+                <div class="h-48 bg-slate-100 overflow-hidden flex items-center justify-center">
+                    @if($book->image)
                         <img src="{{ placeholder($book->image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                @endif
+                    @else
+                        <div class="flex flex-col items-center justify-center text-slate-400">
+                            <span class="text-3xl mb-1">📚</span>
+                            <span class="text-xs font-medium">No cover image</span>
+                        </div>
+                    @endif
+                </div>
                 <div class="p-8">
                     <div class="flex items-center justify-between mb-6">
                         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold 

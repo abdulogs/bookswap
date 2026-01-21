@@ -18,6 +18,12 @@ new class extends Component {
 
         if (auth()->attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
+            
+            // Redirect based on user role
+            if (auth()->user()->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            }
+            
             return redirect()->route('home');
         }
 

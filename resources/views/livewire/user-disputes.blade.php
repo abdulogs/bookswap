@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Volt\Component;
 use App\Models\Dispute;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     public $disputeId;
@@ -63,72 +64,86 @@ new class extends Component {
             </div>
 
             <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 mb-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h1 class="text-3xl font-bold text-slate-800">{{ $this->dispute->title }}</h1>
-                    @if($this->dispute->reporter_id === auth()->id())
-                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-800">
-                            You are the Reporter
-                        </span>
-                    @else
-                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-purple-100 text-purple-800">
-                            You are Involved
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Book</p>
-                        <p class="text-lg text-slate-800">{{ $this->dispute->bookRequest->book->title }}</p>
-                        <a href="{{ route('books.show', $this->dispute->bookRequest->book) }}" 
-                           class="text-indigo-600 hover:text-indigo-700 text-sm font-medium mt-1 inline-block">
-                            View Book →
-                        </a>
+                <div class="flex items-start space-x-6 mb-6">
+                    <div class="w-24 h-32 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0">
+                        @if($this->dispute->bookRequest->book->image)
+                            <img src="{{ Storage::url($this->dispute->bookRequest->book->image) }}" alt="{{ $this->dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="flex flex-col items-center justify-center text-slate-400">
+                                <span class="text-3xl mb-1">📚</span>
+                                <span class="text-[10px] font-medium text-center px-1">No cover image</span>
+                            </div>
+                        @endif
                     </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Book Request</p>
-                        <a href="{{ route('requests.index') }}" 
-                           class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
-                            View Request Details →
-                        </a>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Reporter</p>
-                        <p class="text-lg text-slate-800">{{ $this->dispute->reporter->name }}</p>
-                        <p class="text-sm text-slate-600">{{ $this->dispute->reporter->email }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Other Party</p>
-                        @php
-                            $otherParty = $this->dispute->bookRequest->borrower_id === $this->dispute->reporter_id 
-                                ? $this->dispute->bookRequest->owner 
-                                : $this->dispute->bookRequest->borrower;
-                        @endphp
-                        <p class="text-lg text-slate-800">{{ $otherParty->name }}</p>
-                        <p class="text-sm text-slate-600">{{ $otherParty->email }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Status</p>
-                        <span class="px-3 py-1 rounded-full text-sm font-bold {{ $this->dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($this->dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : ($this->dispute->status === 'in_review' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800')) }}">
-                            {{ ucfirst(str_replace('_', ' ', $this->dispute->status)) }}
-                        </span>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Created</p>
-                        <p class="text-lg text-slate-800">{{ $this->dispute->created_at->format('M d, Y h:i A') }}</p>
-                    </div>
-                    @if($this->dispute->resolved_at)
-                        <div>
-                            <p class="text-sm font-bold text-slate-500 mb-2">Resolved At</p>
-                            <p class="text-lg text-slate-800">{{ $this->dispute->resolved_at->format('M d, Y h:i A') }}</p>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <h1 class="text-3xl font-bold text-slate-800">{{ $this->dispute->title }}</h1>
+                            @if($this->dispute->reporter_id === auth()->id())
+                                <span class="px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-800">
+                                    You are the Reporter
+                                </span>
+                            @else
+                                <span class="px-4 py-2 rounded-full text-sm font-bold bg-purple-100 text-purple-800">
+                                    You are Involved
+                                </span>
+                            @endif
                         </div>
-                    @endif
-                    @if($this->dispute->resolver)
-                        <div>
-                            <p class="text-sm font-bold text-slate-500 mb-2">Resolved By</p>
-                            <p class="text-lg text-slate-800">{{ $this->dispute->resolver->name }}</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Book</p>
+                                <p class="text-lg text-slate-800">{{ $this->dispute->bookRequest->book->title }}</p>
+                                <a href="{{ route('books.show', $this->dispute->bookRequest->book) }}" 
+                                   class="text-indigo-600 hover:text-indigo-700 text-sm font-medium mt-1 inline-block">
+                                    View Book →
+                                </a>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Book Request</p>
+                                <a href="{{ route('requests.index') }}" 
+                                   class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                                    View Request Details →
+                                </a>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Reporter</p>
+                                <p class="text-lg text-slate-800">{{ $this->dispute->reporter->name }}</p>
+                                <p class="text-sm text-slate-600">{{ $this->dispute->reporter->email }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Other Party</p>
+                                @php
+                                    $otherParty = $this->dispute->bookRequest->borrower_id === $this->dispute->reporter_id 
+                                        ? $this->dispute->bookRequest->owner 
+                                        : $this->dispute->bookRequest->borrower;
+                                @endphp
+                                <p class="text-lg text-slate-800">{{ $otherParty->name }}</p>
+                                <p class="text-sm text-slate-600">{{ $otherParty->email }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Status</p>
+                                <span class="px-3 py-1 rounded-full text-sm font-bold {{ $this->dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($this->dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : ($this->dispute->status === 'in_review' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800')) }}">
+                                    {{ ucfirst(str_replace('_', ' ', $this->dispute->status)) }}
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Created</p>
+                                <p class="text-lg text-slate-800">{{ $this->dispute->created_at->format('M d, Y h:i A') }}</p>
+                            </div>
+                            @if($this->dispute->resolved_at)
+                                <div>
+                                    <p class="text-sm font-bold text-slate-500 mb-2">Resolved At</p>
+                                    <p class="text-lg text-slate-800">{{ $this->dispute->resolved_at->format('M d, Y h:i A') }}</p>
+                                </div>
+                            @endif
+                            @if($this->dispute->resolver)
+                                <div>
+                                    <p class="text-sm font-bold text-slate-500 mb-2">Resolved By</p>
+                                    <p class="text-lg text-slate-800">{{ $this->dispute->resolver->name }}</p>
+                                </div>
+                            @endif
                         </div>
-                    @endif
+                    </div>
                 </div>
 
                 <div class="mb-6">
@@ -180,8 +195,8 @@ new class extends Component {
                     <table class="min-w-full divide-y divide-slate-200">
                         <thead class="bg-gradient-to-r from-slate-50 to-gray-50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Title</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Book</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Title</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Your Role</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Created</th>
@@ -192,9 +207,23 @@ new class extends Component {
                             @forelse($this->disputes as $dispute)
                                 <tr class="hover:bg-slate-50/50 transition-colors">
                                     <td class="px-6 py-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-12 h-16 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center">
+                                                @if($dispute->bookRequest->book->image)
+                                                    <img src="{{ Storage::url($dispute->bookRequest->book->image) }}" alt="{{ $dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <span class="text-xl text-slate-400">📚</span>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-slate-800 line-clamp-1">{{ $dispute->bookRequest->book->title }}</p>
+                                                <p class="text-xs text-slate-500 line-clamp-1">{{ $dispute->bookRequest->book->author ?? '' }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
                                         <p class="font-bold text-slate-800">{{ $dispute->title }}</p>
                                     </td>
-                                    <td class="px-6 py-4 text-slate-600">{{ $dispute->bookRequest->book->title }}</td>
                                     <td class="px-6 py-4">
                                         @if($dispute->reporter_id === auth()->id())
                                             <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">

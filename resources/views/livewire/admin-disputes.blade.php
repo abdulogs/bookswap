@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Rule;
 use App\Models\Dispute;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     #[Rule('nullable|string|max:1000')]
@@ -79,26 +80,39 @@ new class extends Component {
             </div>
 
             <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 mb-8">
-                <h1 class="text-3xl font-bold text-slate-800 mb-6">{{ $this->dispute->title }}</h1>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Book</p>
-                        <p class="text-lg text-slate-800">{{ $this->dispute->bookRequest->book->title }}</p>
+                <div class="flex items-start space-x-6 mb-6">
+                    <div class="w-24 h-32 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0">
+                        @if($this->dispute->bookRequest->book->image)
+                            <img src="{{ Storage::url($this->dispute->bookRequest->book->image) }}" alt="{{ $this->dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="flex flex-col items-center justify-center text-slate-400">
+                                <span class="text-3xl mb-1">📚</span>
+                                <span class="text-[10px] font-medium text-center px-1">No cover image</span>
+                            </div>
+                        @endif
                     </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Reporter</p>
-                        <p class="text-lg text-slate-800">{{ $this->dispute->reporter->name }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Status</p>
-                        <span class="px-3 py-1 rounded-full text-sm font-bold {{ $this->dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($this->dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800') }}">
-                            {{ ucfirst(str_replace('_', ' ', $this->dispute->status)) }}
-                        </span>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-slate-500 mb-2">Created</p>
-                        <p class="text-lg text-slate-800">{{ $this->dispute->created_at->format('M d, Y h:i A') }}</p>
+                    <div class="flex-1">
+                        <h1 class="text-3xl font-bold text-slate-800 mb-4">{{ $this->dispute->title }}</h1>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Book</p>
+                                <p class="text-lg text-slate-800">{{ $this->dispute->bookRequest->book->title }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Reporter</p>
+                                <p class="text-lg text-slate-800">{{ $this->dispute->reporter->name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Status</p>
+                                <span class="px-3 py-1 rounded-full text-sm font-bold {{ $this->dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($this->dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800') }}">
+                                    {{ ucfirst(str_replace('_', ' ', $this->dispute->status)) }}
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-500 mb-2">Created</p>
+                                <p class="text-lg text-slate-800">{{ $this->dispute->created_at->format('M d, Y h:i A') }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -149,8 +163,8 @@ new class extends Component {
                     <table class="min-w-full divide-y divide-slate-200">
                         <thead class="bg-gradient-to-r from-slate-50 to-gray-50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Title</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Book</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Title</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Reporter</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Created</th>
@@ -161,9 +175,23 @@ new class extends Component {
                             @forelse($this->disputes as $dispute)
                                 <tr class="hover:bg-slate-50/50 transition-colors">
                                     <td class="px-6 py-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-12 h-16 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center">
+                                                @if($dispute->bookRequest->book->image)
+                                                    <img src="{{ Storage::url($dispute->bookRequest->book->image) }}" alt="{{ $dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <span class="text-xl text-slate-400">📚</span>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-slate-800 line-clamp-1">{{ $dispute->bookRequest->book->title }}</p>
+                                                <p class="text-xs text-slate-500 line-clamp-1">{{ $dispute->bookRequest->book->author ?? '' }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
                                         <p class="font-bold text-slate-800">{{ $dispute->title }}</p>
                                     </td>
-                                    <td class="px-6 py-4 text-slate-600">{{ $dispute->bookRequest->book->title }}</td>
                                     <td class="px-6 py-4 text-slate-600">{{ $dispute->reporter->name }}</td>
                                     <td class="px-6 py-4">
                                         <span class="px-3 py-1 rounded-full text-xs font-bold {{ $dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800') }}">
