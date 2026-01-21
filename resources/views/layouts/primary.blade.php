@@ -30,6 +30,16 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                            @guest
+                                <a href="{{ route('home') }}"
+                                    class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                    Home
+                                </a>
+                                <a href="{{ route('books.index') }}"
+                                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                    Browse Books
+                                </a>
+                            @endguest
                             @auth
                                 @if (auth()->user()->isAdmin())
                                     <a href="{{ route('admin.dashboard') }}"
