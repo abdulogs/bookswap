@@ -26,7 +26,7 @@ new class extends Component {
         } else {
             $this->requestId = request()->query('request');
         }
-        
+
         if ($this->requestId) {
             $this->loadRequest();
         }
@@ -34,9 +34,8 @@ new class extends Component {
 
     public function loadRequest()
     {
-        $this->bookRequest = BookRequest::with(['book', 'borrower', 'owner'])
-            ->findOrFail($this->requestId);
-        
+        $this->bookRequest = BookRequest::with(['book', 'borrower', 'owner'])->findOrFail($this->requestId);
+
         // Ensure user is part of this request and request is returned
         if (auth()->id() !== $this->bookRequest->borrower_id && auth()->id() !== $this->bookRequest->owner_id) {
             abort(403);
@@ -57,9 +56,7 @@ new class extends Component {
             return null;
         }
 
-        return $this->type === 'lender' 
-            ? $this->bookRequest->owner 
-            : $this->bookRequest->borrower;
+        return $this->type === 'lender' ? $this->bookRequest->owner : $this->bookRequest->borrower;
     }
 
     public function getExistingRatingProperty()
@@ -84,7 +81,7 @@ new class extends Component {
 
         // Check if rating already exists
         $existingRating = $this->existingRating;
-        
+
         if ($existingRating) {
             $existingRating->update([
                 'rating' => $this->rating,
@@ -111,7 +108,7 @@ new class extends Component {
 
 <section>
     <div class="max-w-4xl mx-auto">
-        @if($this->bookRequest)
+        @if ($this->bookRequest)
             <!-- Header -->
             <div class="mb-8">
                 <a href="{{ route('requests.index') }}"
@@ -122,12 +119,14 @@ new class extends Component {
                     </svg>
                     Back to Requests
                 </a>
-                
+
                 <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6">
                     <div class="flex items-center space-x-6">
-                        <div class="w-20 h-28 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center">
-                            @if($this->bookRequest->book->image)
-                                <img src="{{ Storage::url($this->bookRequest->book->image) }}" alt="{{ $this->bookRequest->book->title }}" class="w-full h-full object-cover">
+                        <div
+                            class="w-20 h-28 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center">
+                            @if ($this->bookRequest->book->image)
+                                <img src="{{ Storage::url($this->bookRequest->book->image) }}"
+                                    alt="{{ $this->bookRequest->book->title }}" class="w-full h-full object-cover">
                             @else
                                 <div class="flex flex-col items-center justify-center text-slate-400">
                                     <span class="text-3xl mb-1">📚</span>
@@ -136,17 +135,21 @@ new class extends Component {
                             @endif
                         </div>
                         <div>
-                            <h1 class="text-3xl font-bold text-slate-800 mb-2">Rate {{ $this->type === 'lender' ? 'Lender' : 'Borrower' }}</h1>
-                            <p class="text-slate-600">Book: <span class="font-bold">{{ $this->bookRequest->book->title }}</span></p>
-                            <p class="text-slate-600">Rate: <span class="font-bold">{{ $this->ratedUser->name }}</span></p>
+                            <h1 class="text-3xl font-bold text-slate-800 mb-2">Rate
+                                {{ $this->type === 'lender' ? 'Lender' : 'Borrower' }}</h1>
+                            <p class="text-slate-600">Book: <span
+                                    class="font-bold">{{ $this->bookRequest->book->title }}</span></p>
+                            <p class="text-slate-600">Rate: <span class="font-bold">{{ $this->ratedUser->name }}</span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            @if($this->existingRating)
+            @if ($this->existingRating)
                 <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
-                    <p class="text-blue-800 font-medium">You have already rated this {{ $this->type }}. You can update your rating below.</p>
+                    <p class="text-blue-800 font-medium">You have already rated this {{ $this->type }}. You can update
+                        your rating below.</p>
                 </div>
             @endif
 
@@ -156,7 +159,7 @@ new class extends Component {
                     <div class="mb-8">
                         <label class="block text-sm font-bold text-slate-700 mb-4">Rating *</label>
                         <div class="flex space-x-2">
-                            @for($i = 1; $i <= 5; $i++)
+                            @for ($i = 1; $i <= 5; $i++)
                                 <button type="button" wire:click="$set('rating', {{ $i }})"
                                     class="w-16 h-16 rounded-2xl transition-all duration-300 transform hover:scale-110 {{ $this->rating >= $i ? 'bg-yellow-400 text-white' : 'bg-slate-200 text-slate-400' }} flex items-center justify-center text-2xl font-bold shadow-lg">
                                     ⭐
@@ -169,7 +172,8 @@ new class extends Component {
                     </div>
 
                     <div class="mb-8">
-                        <label for="review" class="block text-sm font-bold text-slate-700 mb-3">Review (Optional)</label>
+                        <label for="review" class="block text-sm font-bold text-slate-700 mb-3">Review
+                            (Optional)</label>
                         <textarea wire:model="review" id="review" rows="6"
                             class="w-full px-4 py-4 border border-slate-300 rounded-2xl text-slate-900 bg-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 shadow-sm resize-none"
                             placeholder="Share your experience..."></textarea>
@@ -192,7 +196,8 @@ new class extends Component {
             </div>
         @else
             <div class="text-center py-20">
-                <div class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <div
+                    class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
                     <span class="text-6xl">⭐</span>
                 </div>
                 <p class="text-slate-600 text-xl mb-4 font-medium">No request selected</p>
@@ -205,4 +210,3 @@ new class extends Component {
         @endif
     </div>
 </section>
-

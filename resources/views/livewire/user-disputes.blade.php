@@ -22,11 +22,9 @@ new class extends Component {
     {
         $this->dispute = Dispute::with(['bookRequest.book', 'bookRequest.borrower', 'bookRequest.owner', 'reporter', 'resolver'])
             ->where(function ($query) {
-                $query->where('reporter_id', auth()->id())
-                    ->orWhereHas('bookRequest', function ($q) {
-                        $q->where('borrower_id', auth()->id())
-                          ->orWhere('owner_id', auth()->id());
-                    });
+                $query->where('reporter_id', auth()->id())->orWhereHas('bookRequest', function ($q) {
+                    $q->where('borrower_id', auth()->id())->orWhere('owner_id', auth()->id());
+                });
             })
             ->findOrFail($this->disputeId);
     }
@@ -35,11 +33,9 @@ new class extends Component {
     {
         return Dispute::with(['bookRequest.book', 'reporter'])
             ->where(function ($query) {
-                $query->where('reporter_id', auth()->id())
-                    ->orWhereHas('bookRequest', function ($q) {
-                        $q->where('borrower_id', auth()->id())
-                          ->orWhere('owner_id', auth()->id());
-                    });
+                $query->where('reporter_id', auth()->id())->orWhereHas('bookRequest', function ($q) {
+                    $q->where('borrower_id', auth()->id())->orWhere('owner_id', auth()->id());
+                });
             })
             ->latest()
             ->paginate(15);
@@ -50,7 +46,7 @@ new class extends Component {
 
 <section>
     <div class="max-w-7xl mx-auto">
-        @if($this->dispute)
+        @if ($this->dispute)
             <!-- Dispute Detail -->
             <div class="mb-8">
                 <a href="{{ route('disputes.index') }}"
@@ -65,9 +61,11 @@ new class extends Component {
 
             <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 mb-8">
                 <div class="flex items-start space-x-6 mb-6">
-                    <div class="w-24 h-32 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0">
-                        @if($this->dispute->bookRequest->book->image)
-                            <img src="{{ Storage::url($this->dispute->bookRequest->book->image) }}" alt="{{ $this->dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
+                    <div
+                        class="w-24 h-32 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0">
+                        @if ($this->dispute->bookRequest->book->image)
+                            <img src="{{ Storage::url($this->dispute->bookRequest->book->image) }}"
+                                alt="{{ $this->dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
                         @else
                             <div class="flex flex-col items-center justify-center text-slate-400">
                                 <span class="text-3xl mb-1">📚</span>
@@ -78,7 +76,7 @@ new class extends Component {
                     <div class="flex-1">
                         <div class="flex items-center justify-between mb-4">
                             <h1 class="text-3xl font-bold text-slate-800">{{ $this->dispute->title }}</h1>
-                            @if($this->dispute->reporter_id === auth()->id())
+                            @if ($this->dispute->reporter_id === auth()->id())
                                 <span class="px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-800">
                                     You are the Reporter
                                 </span>
@@ -88,20 +86,20 @@ new class extends Component {
                                 </span>
                             @endif
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
                             <div>
                                 <p class="text-sm font-bold text-slate-500 mb-2">Book</p>
                                 <p class="text-lg text-slate-800">{{ $this->dispute->bookRequest->book->title }}</p>
-                                <a href="{{ route('books.show', $this->dispute->bookRequest->book) }}" 
-                                   class="text-indigo-600 hover:text-indigo-700 text-sm font-medium mt-1 inline-block">
+                                <a href="{{ route('books.show', $this->dispute->bookRequest->book) }}"
+                                    class="text-indigo-600 hover:text-indigo-700 text-sm font-medium mt-1 inline-block">
                                     View Book →
                                 </a>
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-slate-500 mb-2">Book Request</p>
-                                <a href="{{ route('requests.index') }}" 
-                                   class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                                <a href="{{ route('requests.index') }}"
+                                    class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
                                     View Request Details →
                                 </a>
                             </div>
@@ -113,30 +111,34 @@ new class extends Component {
                             <div>
                                 <p class="text-sm font-bold text-slate-500 mb-2">Other Party</p>
                                 @php
-                                    $otherParty = $this->dispute->bookRequest->borrower_id === $this->dispute->reporter_id 
-                                        ? $this->dispute->bookRequest->owner 
-                                        : $this->dispute->bookRequest->borrower;
+                                    $otherParty =
+                                        $this->dispute->bookRequest->borrower_id === $this->dispute->reporter_id
+                                            ? $this->dispute->bookRequest->owner
+                                            : $this->dispute->bookRequest->borrower;
                                 @endphp
                                 <p class="text-lg text-slate-800">{{ $otherParty->name }}</p>
                                 <p class="text-sm text-slate-600">{{ $otherParty->email }}</p>
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-slate-500 mb-2">Status</p>
-                                <span class="px-3 py-1 rounded-full text-sm font-bold {{ $this->dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($this->dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : ($this->dispute->status === 'in_review' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800')) }}">
+                                <span
+                                    class="px-3 py-1 rounded-full text-sm font-bold {{ $this->dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($this->dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : ($this->dispute->status === 'in_review' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800')) }}">
                                     {{ ucfirst(str_replace('_', ' ', $this->dispute->status)) }}
                                 </span>
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-slate-500 mb-2">Created</p>
-                                <p class="text-lg text-slate-800">{{ $this->dispute->created_at->format('M d, Y h:i A') }}</p>
+                                <p class="text-lg text-slate-800">
+                                    {{ $this->dispute->created_at->format('M d, Y h:i A') }}</p>
                             </div>
-                            @if($this->dispute->resolved_at)
+                            @if ($this->dispute->resolved_at)
                                 <div>
                                     <p class="text-sm font-bold text-slate-500 mb-2">Resolved At</p>
-                                    <p class="text-lg text-slate-800">{{ $this->dispute->resolved_at->format('M d, Y h:i A') }}</p>
+                                    <p class="text-lg text-slate-800">
+                                        {{ $this->dispute->resolved_at->format('M d, Y h:i A') }}</p>
                                 </div>
                             @endif
-                            @if($this->dispute->resolver)
+                            @if ($this->dispute->resolver)
                                 <div>
                                     <p class="text-sm font-bold text-slate-500 mb-2">Resolved By</p>
                                     <p class="text-lg text-slate-800">{{ $this->dispute->resolver->name }}</p>
@@ -151,22 +153,25 @@ new class extends Component {
                     <p class="text-slate-700 bg-slate-50 rounded-2xl p-4">{{ $this->dispute->description }}</p>
                 </div>
 
-                @if($this->dispute->admin_notes)
+                @if ($this->dispute->admin_notes)
                     <div class="mb-6">
                         <p class="text-sm font-bold text-slate-500 mb-2">Admin Response</p>
-                        <p class="text-slate-700 bg-indigo-50 rounded-2xl p-4 border border-indigo-100">{{ $this->dispute->admin_notes }}</p>
+                        <p class="text-slate-700 bg-indigo-50 rounded-2xl p-4 border border-indigo-100">
+                            {{ $this->dispute->admin_notes }}</p>
                     </div>
                 @else
                     <div class="mb-6">
                         <p class="text-sm font-bold text-slate-500 mb-2">Admin Response</p>
-                        <p class="text-slate-500 bg-slate-50 rounded-2xl p-4 italic">No response from admin yet. Your dispute is being reviewed.</p>
+                        <p class="text-slate-500 bg-slate-50 rounded-2xl p-4 italic">No response from admin yet. Your
+                            dispute is being reviewed.</p>
                     </div>
                 @endif
             </div>
         @else
             <!-- Disputes List -->
             <div class="text-center mb-16">
-                <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                <div
+                    class="w-24 h-24 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
                     <span class="text-white text-4xl">⚖️</span>
                 </div>
                 <h1 class="text-5xl md:text-6xl font-bold text-slate-800 mb-6">
@@ -178,11 +183,13 @@ new class extends Component {
             </div>
 
             @if (session('success'))
-                <div class="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-2xl p-6 mb-12 text-center">
+                <div
+                    class="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-2xl p-6 mb-12 text-center">
                     <div class="flex items-center justify-center space-x-3">
                         <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
                         <p class="text-emerald-800 font-bold text-lg">{{ session('success') }}</p>
@@ -197,7 +204,8 @@ new class extends Component {
                             <tr>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Book</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Title</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Your Role</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Your Role
+                                </th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Created</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Actions</th>
@@ -208,16 +216,21 @@ new class extends Component {
                                 <tr class="hover:bg-slate-50/50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-12 h-16 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center">
-                                                @if($dispute->bookRequest->book->image)
-                                                    <img src="{{ Storage::url($dispute->bookRequest->book->image) }}" alt="{{ $dispute->bookRequest->book->title }}" class="w-full h-full object-cover">
+                                            <div
+                                                class="w-12 h-16 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center">
+                                                @if ($dispute->bookRequest->book->image)
+                                                    <img src="{{ Storage::url($dispute->bookRequest->book->image) }}"
+                                                        alt="{{ $dispute->bookRequest->book->title }}"
+                                                        class="w-full h-full object-cover">
                                                 @else
                                                     <span class="text-xl text-slate-400">📚</span>
                                                 @endif
                                             </div>
                                             <div>
-                                                <p class="font-bold text-slate-800 line-clamp-1">{{ $dispute->bookRequest->book->title }}</p>
-                                                <p class="text-xs text-slate-500 line-clamp-1">{{ $dispute->bookRequest->book->author ?? '' }}</p>
+                                                <p class="font-bold text-slate-800 line-clamp-1">
+                                                    {{ $dispute->bookRequest->book->title }}</p>
+                                                <p class="text-xs text-slate-500 line-clamp-1">
+                                                    {{ $dispute->bookRequest->book->author ?? '' }}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -225,22 +238,26 @@ new class extends Component {
                                         <p class="font-bold text-slate-800">{{ $dispute->title }}</p>
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if($dispute->reporter_id === auth()->id())
-                                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                                        @if ($dispute->reporter_id === auth()->id())
+                                            <span
+                                                class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
                                                 Reporter
                                             </span>
                                         @else
-                                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">
+                                            <span
+                                                class="px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">
                                                 Involved Party
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold {{ $dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : ($dispute->status === 'in_review' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800')) }}">
+                                        <span
+                                            class="px-3 py-1 rounded-full text-xs font-bold {{ $dispute->status === 'open' ? 'bg-red-100 text-red-800' : ($dispute->status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : ($dispute->status === 'in_review' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800')) }}">
                                             {{ ucfirst(str_replace('_', ' ', $dispute->status)) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-slate-600">{{ $dispute->created_at->format('M d, Y') }}</td>
+                                    <td class="px-6 py-4 text-slate-600">{{ $dispute->created_at->format('M d, Y') }}
+                                    </td>
                                     <td class="px-6 py-4">
                                         <a href="{{ route('disputes.show', $dispute) }}"
                                             class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-sm font-bold transition-all">
@@ -252,7 +269,8 @@ new class extends Component {
                                 <tr>
                                     <td colspan="6" class="px-6 py-12 text-center text-slate-500">
                                         <div class="flex flex-col items-center">
-                                            <div class="w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mb-4">
+                                            <div
+                                                class="w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mb-4">
                                                 <span class="text-4xl">📋</span>
                                             </div>
                                             <p class="text-lg font-medium mb-2">No disputes found</p>

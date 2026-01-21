@@ -89,9 +89,10 @@ new class extends Component {
             @forelse($this->featuredBooks as $book)
                 <div
                     class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl hover:shadow-2xl border border-white/20 overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
-                    @if($book->image)
+                    @if ($book->image)
                         <div class="h-48 overflow-hidden">
-                            <img src="{{ Storage::url($book->image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <img src="{{ Storage::url($book->image) }}" alt="{{ $book->title }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>
                     @endif
                     <div class="p-8">
@@ -107,12 +108,14 @@ new class extends Component {
                             </span>
                         </div>
 
-                        @if($book->average_rating)
+                        @if ($book->average_rating)
                             <div class="flex items-center space-x-2 mb-4">
                                 <div class="flex items-center">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <svg class="w-4 h-4 {{ $i <= round($book->average_rating) ? 'text-yellow-400 fill-current' : 'text-slate-300' }}" viewBox="0 0 20 20">
-                                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <svg class="w-4 h-4 {{ $i <= round($book->average_rating) ? 'text-yellow-400 fill-current' : 'text-slate-300' }}"
+                                            viewBox="0 0 20 20">
+                                            <path
+                                                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                         </svg>
                                     @endfor
                                 </div>

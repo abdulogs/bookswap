@@ -35,12 +35,12 @@ new class extends Component {
     public function deleteBook($bookId)
     {
         $book = Book::findOrFail($bookId);
-        
+
         // Delete image if exists
         if ($book->image && Storage::disk('public')->exists($book->image)) {
             Storage::disk('public')->delete($book->image);
         }
-        
+
         $book->delete();
         session()->flash('success', 'Book deleted successfully!');
     }
@@ -91,10 +91,12 @@ new class extends Component {
                             <tr class="hover:bg-slate-50/50 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-4">
-                                        @if($book->image)
-                                            <img src="{{ Storage::url($book->image) }}" alt="{{ $book->title }}" class="w-16 h-20 object-cover rounded-lg">
+                                        @if ($book->image)
+                                            <img src="{{ Storage::url($book->image) }}" alt="{{ $book->title }}"
+                                                class="w-16 h-20 object-cover rounded-lg">
                                         @else
-                                            <div class="w-16 h-20 bg-slate-200 rounded-lg flex items-center justify-center">
+                                            <div
+                                                class="w-16 h-20 bg-slate-200 rounded-lg flex items-center justify-center">
                                                 <span class="text-2xl">📚</span>
                                             </div>
                                         @endif
@@ -106,19 +108,22 @@ new class extends Component {
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $book->owner->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 rounded-full text-xs font-bold {{ $book->status === 'Available' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-xs font-bold {{ $book->status === 'Available' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
                                         {{ $book->status }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $book->genre }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($book->average_rating)
+                                    @if ($book->average_rating)
                                         <div class="flex items-center space-x-2">
                                             <div class="flex items-center">
                                                 <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                                    <path
+                                                        d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                                 </svg>
-                                                <span class="ml-1 text-sm font-bold text-slate-700">{{ $book->average_rating }}</span>
+                                                <span
+                                                    class="ml-1 text-sm font-bold text-slate-700">{{ $book->average_rating }}</span>
                                             </div>
                                             <span class="text-xs text-slate-500">({{ $book->total_ratings }})</span>
                                         </div>
@@ -152,4 +157,3 @@ new class extends Component {
         </div>
     </div>
 </section>
-

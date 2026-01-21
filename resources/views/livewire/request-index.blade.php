@@ -485,7 +485,7 @@ new class extends Component {
                                                     class="text-white text-sm font-bold">{{ substr($request->owner->name, 0, 1) }}</span>
                                             </div>
                                             <div>
-                                              <div class="text-lg font-bold text-slate-800">
+                                                <div class="text-lg font-bold text-slate-800">
                                                     {{ $request->owner->name }}</div>
                                                 <div class="text-slate-600 text-sm">{{ $request->owner->email }}</div>
                                             </div>

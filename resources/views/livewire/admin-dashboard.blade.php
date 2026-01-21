@@ -53,7 +53,8 @@ new class extends Component {
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <div class="text-center mb-16">
-            <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
+            <div
+                class="w-24 h-24 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
                 <span class="text-white text-4xl">👑</span>
             </div>
             <h1 class="text-5xl md:text-6xl font-bold text-slate-800 mb-6">
@@ -153,7 +154,8 @@ new class extends Component {
                                     <p class="text-sm text-slate-600">Borrower: {{ $request->borrower->name }}</p>
                                     <p class="text-sm text-slate-600">Owner: {{ $request->owner->name }}</p>
                                 </div>
-                                <span class="px-3 py-1 rounded-full text-xs font-bold {{ $request->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ($request->status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800') }}">
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-bold {{ $request->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ($request->status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800') }}">
                                     {{ $request->status }}
                                 </span>
                             </div>
@@ -188,4 +190,3 @@ new class extends Component {
         </div>
     </div>
 </section>
-

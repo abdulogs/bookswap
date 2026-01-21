@@ -6,6 +6,7 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Rule;
 use App\Models\User;
 
+
 new class extends Component {
     #[Rule('required|string|max:255')]
     public $name = '';

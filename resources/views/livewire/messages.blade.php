@@ -21,7 +21,7 @@ new class extends Component {
         } else {
             $this->requestId = request()->query('request');
         }
-        
+
         if ($this->requestId) {
             $this->loadRequest();
         }
@@ -29,9 +29,8 @@ new class extends Component {
 
     public function loadRequest()
     {
-        $this->bookRequest = BookRequest::with(['book', 'borrower', 'owner'])
-            ->findOrFail($this->requestId);
-        
+        $this->bookRequest = BookRequest::with(['book', 'borrower', 'owner'])->findOrFail($this->requestId);
+
         // Ensure user is part of this request
         if (auth()->id() !== $this->bookRequest->borrower_id && auth()->id() !== $this->bookRequest->owner_id) {
             abort(403);
@@ -56,9 +55,7 @@ new class extends Component {
             return null;
         }
 
-        return auth()->id() === $this->bookRequest->borrower_id 
-            ? $this->bookRequest->owner 
-            : $this->bookRequest->borrower;
+        return auth()->id() === $this->bookRequest->borrower_id ? $this->bookRequest->owner : $this->bookRequest->borrower;
     }
 
     public function sendMessage()
@@ -85,7 +82,7 @@ new class extends Component {
     public function markAsRead($messageId)
     {
         $message = Message::findOrFail($messageId);
-        
+
         if ($message->receiver_id === auth()->id() && !$message->read) {
             $message->update(['read' => true]);
         }
@@ -96,7 +93,7 @@ new class extends Component {
 
 <section>
     <div class="max-w-6xl mx-auto">
-        @if($this->bookRequest)
+        @if ($this->bookRequest)
             <!-- Header -->
             <div class="mb-8">
                 <a href="{{ route('requests.index') }}"
@@ -107,26 +104,33 @@ new class extends Component {
                     </svg>
                     Back to Requests
                 </a>
-                
+
                 <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6">
                     <h1 class="text-3xl font-bold text-slate-800 mb-2">Messages</h1>
-                    <p class="text-slate-600">Book: <span class="font-bold">{{ $this->bookRequest->book->title }}</span></p>
-                    <p class="text-slate-600">Conversation with: <span class="font-bold">{{ $this->otherUser->name }}</span></p>
+                    <p class="text-slate-600">Book: <span class="font-bold">{{ $this->bookRequest->book->title }}</span>
+                    </p>
+                    <p class="text-slate-600">Conversation with: <span
+                            class="font-bold">{{ $this->otherUser->name }}</span></p>
                 </div>
             </div>
 
             <!-- Messages -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 mb-8" style="max-height: 600px; overflow-y: auto;">
+            <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 mb-8"
+                style="max-height: 600px; overflow-y: auto;">
                 <div class="space-y-6">
                     @forelse($this->messages as $message)
                         <div class="flex {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
-                            <div class="max-w-2xl {{ $message->sender_id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-800' }} rounded-2xl p-4 shadow-lg">
+                            <div
+                                class="max-w-2xl {{ $message->sender_id === auth()->id() ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-800' }} rounded-2xl p-4 shadow-lg">
                                 <div class="flex items-center space-x-3 mb-2">
-                                    <div class="w-8 h-8 {{ $message->sender_id === auth()->id() ? 'bg-indigo-600' : 'bg-slate-200' }} rounded-full flex items-center justify-center">
-                                        <span class="text-sm font-bold">{{ substr($message->sender->name, 0, 1) }}</span>
+                                    <div
+                                        class="w-8 h-8 {{ $message->sender_id === auth()->id() ? 'bg-indigo-600' : 'bg-slate-200' }} rounded-full flex items-center justify-center">
+                                        <span
+                                            class="text-sm font-bold">{{ substr($message->sender->name, 0, 1) }}</span>
                                     </div>
                                     <span class="font-bold text-sm">{{ $message->sender->name }}</span>
-                                    <span class="text-xs opacity-75">{{ $message->created_at->format('M d, h:i A') }}</span>
+                                    <span
+                                        class="text-xs opacity-75">{{ $message->created_at->format('M d, h:i A') }}</span>
                                 </div>
                                 <p class="leading-relaxed">{{ $message->message }}</p>
                             </div>
@@ -162,7 +166,8 @@ new class extends Component {
             </div>
         @else
             <div class="text-center py-20">
-                <div class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <div
+                    class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
                     <span class="text-6xl">💬</span>
                 </div>
                 <p class="text-slate-600 text-xl mb-4 font-medium">No conversation selected</p>
@@ -175,4 +180,3 @@ new class extends Component {
         @endif
     </div>
 </section>
-

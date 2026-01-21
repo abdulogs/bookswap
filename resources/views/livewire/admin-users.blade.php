@@ -20,13 +20,13 @@ new class extends Component {
         $query = User::query();
 
         if ($this->search) {
-            $query->where(function($q) {
-                $q->where('name', 'like', "%{$this->search}%")
-                  ->orWhere('email', 'like', "%{$this->search}%");
+            $query->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")->orWhere('email', 'like', "%{$this->search}%");
             });
         }
 
-        return $query->withCount(['books', 'borrowingRequests', 'lendingRequests'])
+        return $query
+            ->withCount(['books', 'borrowingRequests', 'lendingRequests'])
             ->latest()
             ->paginate(15);
     }
@@ -34,7 +34,7 @@ new class extends Component {
     public function deleteUser($userId)
     {
         $user = User::findOrFail($userId);
-        
+
         if ($user->id === auth()->id()) {
             session()->flash('error', 'You cannot delete your own account.');
             return;
@@ -47,16 +47,16 @@ new class extends Component {
     public function toggleRole($userId)
     {
         $user = User::findOrFail($userId);
-        
+
         if ($user->id === auth()->id()) {
             session()->flash('error', 'You cannot change your own role.');
             return;
         }
 
         $user->update([
-            'role' => $user->role === 'admin' ? 'member' : 'admin'
+            'role' => $user->role === 'admin' ? 'member' : 'admin',
         ]);
-        
+
         session()->flash('success', 'User role updated successfully!');
     }
 };
@@ -98,20 +98,24 @@ new class extends Component {
                             <tr class="hover:bg-slate-50/50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white text-sm font-bold">{{ substr($user->name, 0, 1) }}</span>
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                                            <span
+                                                class="text-white text-sm font-bold">{{ substr($user->name, 0, 1) }}</span>
                                         </div>
                                         <span class="font-bold text-slate-800">{{ $user->name }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $user->email }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 rounded-full text-xs font-bold {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-xs font-bold {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
                                         {{ ucfirst($user->role) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $user->books_count }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $user->borrowing_requests_count + $user->lending_requests_count }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-slate-600">
+                                    {{ $user->borrowing_requests_count + $user->lending_requests_count }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
                                         <button wire:click="toggleRole({{ $user->id }})"
@@ -144,4 +148,3 @@ new class extends Component {
         </div>
     </div>
 </section>
-
