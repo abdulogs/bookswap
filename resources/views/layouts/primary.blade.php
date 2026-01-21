@@ -30,31 +30,48 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <a href="{{ route('home') }}"
-                                class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Home
-                            </a>
-                            <a href="{{ route('books.index') }}"
-                                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Browse Books
-                            </a>
                             @auth
-                                <a href="{{ route('books.my-books') }}"
-                                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                    My Books
-                                </a>
-                                <a href="{{ route('requests.index') }}"
-                                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                    Requests
-                                </a>
-                                <a href="{{ route('notifications.index') }}"
-                                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                    Notifications
-                                </a>
-                                @if(auth()->user()->isAdmin())
+                                @if (auth()->user()->isAdmin())
                                     <a href="{{ route('admin.dashboard') }}"
                                         class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                        Admin
+                                        Dashboard
+                                    </a>
+                                    <a href="{{ route('admin.books.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Books
+                                    </a>
+                                    <a href="{{ route('admin.users.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Users
+                                    </a>
+                                    <a href="{{ route('admin.disputes.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Disputes
+                                    </a>
+                                @else
+                                    <a href="{{ route('home') }}"
+                                        class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Home
+                                    </a>
+                                    <a href="{{ route('books.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Browse Books
+                                    </a>
+                                    <a href="{{ route('books.my-books') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        My Books
+                                    </a>
+                                    <a href="{{ route('requests.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Requests
+                                    </a>
+                                    <a href="{{ route('notifications.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Notifications
+                                    </a>
+                                    <a href="{{ route('disputes.index') }}"
+                                        class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        My Disputes
                                     </a>
                                 @endif
                             @endauth

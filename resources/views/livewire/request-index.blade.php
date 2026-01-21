@@ -210,11 +210,11 @@ new class extends Component {
     @endif
 
     <!-- Dispute Form Modal -->
-    @if($this->showDisputeForm)
+    @if ($this->showDisputeForm)
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
                 <h2 class="text-3xl font-bold text-slate-800 mb-6">Report Dispute</h2>
-                
+
                 <form wire:submit="submitDispute">
                     <div class="mb-6">
                         <label for="disputeTitle" class="block text-sm font-bold text-slate-700 mb-3">Title *</label>
@@ -227,7 +227,8 @@ new class extends Component {
                     </div>
 
                     <div class="mb-6">
-                        <label for="disputeDescription" class="block text-sm font-bold text-slate-700 mb-3">Description *</label>
+                        <label for="disputeDescription" class="block text-sm font-bold text-slate-700 mb-3">Description
+                            *</label>
                         <textarea wire:model="disputeDescription" id="disputeDescription" rows="6"
                             class="w-full px-4 py-4 border border-slate-300 rounded-2xl text-slate-900 bg-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 shadow-sm resize-none"
                             placeholder="Describe the issue in detail..."></textarea>
@@ -296,15 +297,18 @@ new class extends Component {
                                             <div>
                                                 <div class="text-lg font-bold text-slate-800">
                                                     {{ $request->book->title }}
-                                                    @if($request->request_type === 'swap')
-                                                        <span class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">Swap</span>
+                                                    @if ($request->request_type === 'swap')
+                                                        <span
+                                                            class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">Swap</span>
                                                     @else
-                                                        <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Borrow</span>
+                                                        <span
+                                                            class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Borrow</span>
                                                     @endif
                                                 </div>
                                                 <div class="text-slate-600">by {{ $request->book->author }}</div>
-                                                @if($request->request_type === 'swap' && $request->swapBook)
-                                                    <div class="text-sm text-purple-600 mt-1">Swap with: {{ $request->swapBook->title }}</div>
+                                                @if ($request->request_type === 'swap' && $request->swapBook)
+                                                    <div class="text-sm text-purple-600 mt-1">Swap with:
+                                                        {{ $request->swapBook->title }}</div>
                                                 @endif
                                             </div>
                                         </div>
@@ -343,10 +347,11 @@ new class extends Component {
                                         </div>
                                     </td>
                                     <td class="px-8 py-6 whitespace-nowrap">
-                                        @if($request->due_date)
+                                        @if ($request->due_date)
                                             <div class="text-slate-700">
-                                                <div class="font-medium">{{ $request->due_date->format('M d, Y') }}</div>
-                                                @if($request->due_date->isPast())
+                                                <div class="font-medium">{{ $request->due_date->format('M d, Y') }}
+                                                </div>
+                                                @if ($request->due_date->isPast())
                                                     <span class="text-red-600 text-sm font-bold">Overdue</span>
                                                 @elseif($request->due_date->diffInDays(now()) <= 3)
                                                     <span class="text-amber-600 text-sm font-bold">Due Soon</span>
@@ -456,15 +461,18 @@ new class extends Component {
                                             <div>
                                                 <div class="text-lg font-bold text-slate-800">
                                                     {{ $request->book->title }}
-                                                    @if($request->request_type === 'swap')
-                                                        <span class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">Swap</span>
+                                                    @if ($request->request_type === 'swap')
+                                                        <span
+                                                            class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">Swap</span>
                                                     @else
-                                                        <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Borrow</span>
+                                                        <span
+                                                            class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Borrow</span>
                                                     @endif
                                                 </div>
                                                 <div class="text-slate-600">by {{ $request->book->author }}</div>
-                                                @if($request->request_type === 'swap' && $request->swapBook)
-                                                    <div class="text-sm text-purple-600 mt-1">Swap with: {{ $request->swapBook->title }}</div>
+                                                @if ($request->request_type === 'swap' && $request->swapBook)
+                                                    <div class="text-sm text-purple-600 mt-1">Swap with:
+                                                        {{ $request->swapBook->title }}</div>
                                                 @endif
                                             </div>
                                         </div>
@@ -477,7 +485,7 @@ new class extends Component {
                                                     class="text-white text-sm font-bold">{{ substr($request->owner->name, 0, 1) }}</span>
                                             </div>
                                             <div>
-                                                <div class="text-lg font-bold text-slate-800">
+                                              <div class="text-lg font-bold text-slate-800">
                                                     {{ $request->owner->name }}</div>
                                                 <div class="text-slate-600 text-sm">{{ $request->owner->email }}</div>
                                             </div>
@@ -502,10 +510,11 @@ new class extends Component {
                                         </div>
                                     </td>
                                     <td class="px-8 py-6 whitespace-nowrap">
-                                        @if($request->due_date)
+                                        @if ($request->due_date)
                                             <div class="text-slate-700">
-                                                <div class="font-medium">{{ $request->due_date->format('M d, Y') }}</div>
-                                                @if($request->due_date->isPast())
+                                                <div class="font-medium">{{ $request->due_date->format('M d, Y') }}
+                                                </div>
+                                                @if ($request->due_date->isPast())
                                                     <span class="text-red-600 text-sm font-bold">Overdue</span>
                                                 @elseif($request->due_date->diffInDays(now()) <= 3)
                                                     <span class="text-amber-600 text-sm font-bold">Due Soon</span>
@@ -516,7 +525,7 @@ new class extends Component {
                                         @endif
                                     </td>
                                     <td class="px-8 py-6 whitespace-nowrap">
-                                        @if($request->status === 'Returned')
+                                        @if ($request->status === 'Returned')
                                             <a href="{{ route('ratings.index') }}?request={{ $request->id }}"
                                                 class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                                                 Rate

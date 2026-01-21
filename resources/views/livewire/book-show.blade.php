@@ -191,7 +191,24 @@ new class extends Component {
                         <div class="flex items-start justify-between mb-6">
                             <div class="flex-1">
                                 <h1 class="text-5xl font-bold text-slate-800 mb-4">{{ $this->book->title }}</h1>
-                                <p class="text-2xl text-slate-600 mb-6 font-light">by {{ $this->book->author }}</p>
+                                <p class="text-2xl text-slate-600 mb-4 font-light">by {{ $this->book->author }}</p>
+                                @if($this->book->average_rating)
+                                    <div class="flex items-center space-x-3 mb-6">
+                                        <div class="flex items-center">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <svg class="w-6 h-6 {{ $i <= round($this->book->average_rating) ? 'text-yellow-400 fill-current' : 'text-slate-300' }}" viewBox="0 0 20 20">
+                                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                                </svg>
+                                            @endfor
+                                        </div>
+                                        <span class="text-xl font-bold text-slate-700">{{ $this->book->average_rating }}</span>
+                                        <span class="text-base text-slate-500">({{ $this->book->total_ratings }} {{ Str::plural('rating', $this->book->total_ratings) }})</span>
+                                    </div>
+                                @else
+                                    <div class="mb-6">
+                                        <span class="text-base text-slate-400">No ratings yet</span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="flex space-x-3">
                                 <span

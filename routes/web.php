@@ -62,6 +62,14 @@ Route::middleware('auth')->group(function () {
     })->name('notifications.index');
 
     // Disputes routes
+    Route::get('/disputes', function () {
+        return view('pages.user-disputes');
+    })->name('disputes.index');
+
+    Route::get('/disputes/{dispute}', function () {
+        return view('pages.user-disputes');
+    })->name('disputes.show');
+
     Route::post('/disputes', function () {
         // This route will be handled by Livewire
         return redirect()->back();

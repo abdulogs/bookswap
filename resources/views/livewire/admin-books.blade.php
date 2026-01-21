@@ -82,6 +82,7 @@ new class extends Component {
                             <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Owner</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Genre</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Rating</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Actions</th>
                         </tr>
                     </thead>
@@ -111,6 +112,21 @@ new class extends Component {
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $book->genre }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($book->average_rating)
+                                        <div class="flex items-center space-x-2">
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                                </svg>
+                                                <span class="ml-1 text-sm font-bold text-slate-700">{{ $book->average_rating }}</span>
+                                            </div>
+                                            <span class="text-xs text-slate-500">({{ $book->total_ratings }})</span>
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-slate-400">No ratings</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <button wire:click="deleteBook({{ $book->id }})"
                                         onclick="return confirm('Are you sure you want to delete this book?')"
                                         class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition-all">
@@ -120,7 +136,7 @@ new class extends Component {
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-500">No books found</td>
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-500">No books found</td>
                             </tr>
                         @endforelse
                     </tbody>

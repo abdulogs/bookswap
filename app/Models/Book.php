@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Rating;
 
 class Book extends Model
 {
@@ -69,5 +70,38 @@ class Book extends Model
             $q->where('title', 'like', "%{$search}%")
                 ->orWhere('author', 'like', "%{$search}%");
         });
+    }
+
+    /**
+     * Get ratings for this book (ratings given to the book owner as lender).
+     */
+    public function ratings()
+    {
+        return Rating::whereHas('bookRequest', function ($query) {
+            $query->where('book_id', $this->id)
+                  ->where('status', 'Returned');
+        })->where('type', 'lender');
+    }
+
+    /**
+     * Get the average rating for this book.
+     */
+    public function getAverageRatingAttribute()
+    {
+        $ratings = $this->ratings()->pluck('rating');
+        
+        if ($ratings->isEmpty()) {
+            return null;
+        }
+        
+        return round($ratings->avg(), 1);
+    }
+
+    /**
+     * Get the total number of ratings for this book.
+     */
+    public function getTotalRatingsAttribute()
+    {
+        return $this->ratings()->count();
     }
 }
