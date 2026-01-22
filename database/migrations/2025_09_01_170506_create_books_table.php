@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('author');
+            $table->string('image')->nullable();
             $table->string('genre');
+            $table->string('location')->nullable();
             $table->enum('condition', ['Excellent', 'Good', 'Fair', 'Poor']);
             $table->enum('status', ['Available', 'Lent Out'])->default('Available');
             $table->text('description')->nullable();

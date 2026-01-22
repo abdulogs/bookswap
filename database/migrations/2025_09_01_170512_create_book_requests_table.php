@@ -18,6 +18,11 @@ return new class extends Migration
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Returned'])->default('Pending');
             $table->text('message')->nullable();
+            $table->enum('request_type', ['borrow', 'swap'])->default('borrow');
+            $table->date('due_date')->nullable();
+            $table->foreignId('swap_book_id')->nullable()->constrained('books')->onDelete('cascade');
+            $table->boolean('reminder_sent')->default(false);
+            $table->timestamp('last_reminder_at')->nullable();
             $table->timestamp('borrowed_at')->nullable();
             $table->timestamp('returned_at')->nullable();
             $table->timestamps();
